@@ -1,0 +1,10 @@
+--- a/pip/_vendor/html5lib/_trie/_base.py.old	2019-06-20 15:14:27.653146798 +0200
++++ b/pip/_vendor/html5lib/_trie/_base.py	2019-06-20 15:14:34.764155286 +0200
+@@ -1,6 +1,6 @@
+ from __future__ import absolute_import, division, unicode_literals
+ 
+-from collections import Mapping
++from collections.abc import Mapping
+ 
+ 
+ class Trie(Mapping):

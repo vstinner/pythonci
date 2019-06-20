@@ -1,0 +1,11 @@
+--- a/pip/_vendor/cachecontrol/serialize.py.old	2019-06-20 15:21:27.809646932 +0200
++++ b/pip/_vendor/cachecontrol/serialize.py	2019-06-20 15:22:14.467702259 +0200
+@@ -179,7 +179,7 @@
+ 
+     def _loads_v4(self, request, data):
+         try:
+-            cached = msgpack.loads(data, encoding="utf-8")
++            cached = msgpack.loads(data, raw=False)
+         except ValueError:
+             return
+ 
