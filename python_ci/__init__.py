@@ -7,12 +7,6 @@ import sys
 import shlex
 import shutil
 
-# XXX pip fails with -Werror:
-#   html5lib/_trie/_base.py
-#   from collections import Mapping
-#
-# XXX need a way to workaround known issues: support patches?
-
 # Fedora build dependencies:
 # python3
 # gcc
