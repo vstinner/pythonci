@@ -1,2 +1,4 @@
 *.py[cod]
 *.swp
+# directory created by python_ci
+work/
