@@ -1,2 +1,2 @@
-from ci_python import CI
+from python_ci import CI
 CI().main()
