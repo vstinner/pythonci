@@ -1,0 +1,4 @@
+pip==19.2.2
+setuptools==41.0.1
+Cython==0.29.13
+numpy==1.17.0
