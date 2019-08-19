@@ -91,9 +91,9 @@ class Jinja(Task):
             ['Jinja2-2.10.1-collections_abc.patch'])
 
         self.app.run_python(["setup.py", "install"], cwd=dirname)
+        self.app.pip_install_update(["pytest"])
 
     def _run_tests(self):
-        self.app.pip_install_update(["pytest"])
         #self.run_python(["-m", "pytest", "--tb=short", "-Werror"])
         self.app.run_python(["-m", "pytest", "--tb=short"])
 
@@ -230,7 +230,7 @@ class CI:
         # FIXME: validate a checksum?
 
     def create_empty_file(self, filename):
-        open(self._install_marker_file, 'wb', 0).close()
+        open(filename, 'wb', 0).close()
 
     def unlink(self, filename):
         if not os.path.exists(filename):
@@ -282,14 +282,18 @@ class CI:
 
     def setup_venv(self):
         create_venv = not os.path.exists(self.venv_dir)
+
         if create_venv:
             try:
                 self.run_python(["-m", "venv", self.venv_dir])
             except:
                 self.rmtree(self.venv_dir)
                 raise
+        else:
+            self.log("venv already exists: %s" % self.venv_dir)
 
         self.set_python(os.path.join(self.venv_dir, "bin", "python"))
+
         if create_venv:
             self.pip_install_update(["setuptools", "pip"])
             self.patch_pip()
