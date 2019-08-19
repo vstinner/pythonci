@@ -220,8 +220,6 @@ class CI:
                 self.run_python([os.path.join(dirname, 'tools', 'test-installed-numpy.py'), "--mode=full"])
 
     def install_jinja(self, run_tests=True):
-        self.setup_env('jinja')
-
         dirname = self.download_extract_tarball(
             'Jinja2', JINJA_TARBALL,
             ['Jinja2-2.10.1-collections_abc.patch'])
@@ -258,7 +256,7 @@ class CI:
     def parse_options(self):
         parser = argparse.ArgumentParser(description='Process some integers.')
         parser.add_argument('command', nargs='?',
-                            choices='run clean'.split(),
+                            choices='run clean cleanall'.split(),
                             default='run')
         self.args = parser.parse_args()
 
@@ -267,25 +265,28 @@ class CI:
             self.work_dir = os.path.join(self.root_dir, name)
         else:
             self.work_dir = self.root_dir
-        self.download_dir = os.path.join(self.work_dir, 'download')
+        self.download_dir = os.path.join(self.root_dir, 'download')
         self.venv_dir = os.path.join(self.work_dir, 'venv')
 
     def setup_env(self, name):
-        self.set_work_dir(name)
+        self.mkdir(self.root_dir)
         self.mkdir(self.work_dir)
         os.chdir(self.work_dir)
         self.setup_venv()
 
-    def run(self):
-        self.install_numpy()
-        #self.install_jinja()
-
-    def cleanup(self):
-        self.rmtree(self.work_dir)
-
     def main(self):
         self.parse_options()
+        if self.args.command == 'cleanall':
+            self.rmtree(self.root_dir)
+            return
+
+        name = 'numpy'
+        #name = 'jinja'
+        self.set_work_dir(name)
+
         if self.args.command == 'clean':
-            self.cleanup()
+            self.rmtree(self.work_dir)
         else:
-            self.run()
+            self.setup_env(name)
+            method = getattr(self, 'install_' + name)
+            method()

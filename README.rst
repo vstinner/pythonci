@@ -26,4 +26,8 @@ Cleanup::
 
     python3 -m python_ci clean
 
+Cleanup all::
+
+    python3 -m python_ci cleanall
+
 Contact: Victor Stinner (Red Hat), vstinner@redhat.com
