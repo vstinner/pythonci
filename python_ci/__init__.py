@@ -243,7 +243,6 @@ class CI:
         if create_venv:
             try:
                 self.run_python(["-m", "venv", self.venv_dir])
-                self.patch_pip()
             except:
                 self.rmtree(self.venv_dir)
                 raise
