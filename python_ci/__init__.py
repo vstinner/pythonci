@@ -67,7 +67,7 @@ class Numpy(Task):
 
     def _install(self):
         # rely on Fedora to provide OpenBLAS or pull it differently?
-        self.pip_install_update(["Cython"])
+        self.app.pip_install_update(["Cython"])
 
         dirname = self.app.download_extract_zip(self.name, NUMPY_ZIP)
 
