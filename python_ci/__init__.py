@@ -9,15 +9,7 @@ import sys
 import urllib.parse
 
 
-# Fedora build dependencies:
-# python3
-# gcc
-# ???
-
-
-VENV_DIR = 'venv'
-
-# FIXME: reproduce env vars
+# FIXME what are (build) dependencies? python3, gcc, ???
 # FIXME: reproduce build
 
 PYTHONCI_PREFIX = 'python-ci-'
@@ -354,7 +346,8 @@ class CI:
 
         #name = 'numpy'
         name = 'jinja'
-        self.set_work_dir(name)
+        pyver = self.get_python_version()
+        self.set_work_dir(name + "-py%s.%s" % pyver[:2])
 
         if self.args.command == 'clean':
             self.rmtree(self.work_dir)
