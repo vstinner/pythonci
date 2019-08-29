@@ -50,6 +50,8 @@ class Task:
                                                  PYTHONCI_PREFIX + 'install_marker_file')
 
         if os.path.exists(self._install_marker_file):
+            self.app.log("%s is already installed in: %s"
+                        % (self.name, self.dirname))
             return
 
         try:
@@ -102,6 +104,12 @@ class Jinja(Task):
     def _run_tests(self):
         #self.run_python(["-m", "pytest", "--tb=short", "-Werror"])
         self.app.run_python(["-m", "pytest", "--tb=short"])
+
+
+TASKS = {
+    'numpy': Numpy,
+    'jinja': Jinja,
+}
 
 
 class CI:
@@ -160,9 +168,8 @@ class CI:
     def run_command(self, args, **kw):
         cmd_str = ' '.join(shlex.quote(arg) for arg in args)
         text = "Run command: %s" % cmd_str
-        if 'cwd' not in kw:
-            kw['cwd'] = self.work_dir
-        text += ' in %s' % kw['cwd']
+        if 'cwd' in kw:
+            text += ' in %s' % kw['cwd']
         self.log(text)
         if 'stdin' not in kw:
             kw['stdin'] = subprocess.DEVNULL
@@ -281,14 +288,6 @@ class CI:
         for filename in patches:
             self.patch(filename, dirname)
 
-    def install_numpy(self):
-        task = Numpy(self)
-        task.run_tests()
-
-    def install_jinja(self, run_tests=True):
-        task = Jinja(self)
-        task.run_tests()
-
     def patch_pip(self):
         ver = self.get_python_version()
         venv_libdir = os.path.join(self.venv_dir, 'lib', 'python%s.%s' % (ver[0], ver[1]), 'site-packages')
@@ -315,9 +314,10 @@ class CI:
 
     def parse_options(self):
         parser = argparse.ArgumentParser(description='Process some integers.')
-        parser.add_argument('command', nargs='?',
-                            choices='run clean cleanall'.split(),
-                            default='run')
+        parser.add_argument('command',
+                            choices='install test clean cleanall'.split())
+        parser.add_argument('task',
+                            choices=sorted(TASKS))
         self.args = parser.parse_args()
 
     def set_work_dir(self, name=None):
@@ -344,13 +344,21 @@ class CI:
             self.rmtree(self.root_dir)
             return
 
-        #name = 'numpy'
-        name = 'jinja'
-        pyver = self.get_python_version()
-        self.set_work_dir(name + "-py%s.%s" % pyver[:2])
+        task_name = self.args.task
+        command = self.args.command
 
         if self.args.command == 'clean':
             self.rmtree(self.work_dir)
         else:
-            method = getattr(self, 'install_' + name)
-            method()
+            pyver = self.get_python_version()
+            self.set_work_dir(task_name + "-py%s.%s" % pyver[:2])
+
+            task_class = TASKS[task_name]
+            task = task_class(self)
+
+            if command == 'install':
+                task.install()
+            elif command == 'test':
+                task.run_tests()
+            else:
+                raise Exception("unknown command: %r" % command)
