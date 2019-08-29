@@ -150,6 +150,7 @@ class CI:
             env['PYTHONDEVMODE'] = '1'
         if self.python_warnings:
             env['PYTHONWARNINGS'] = ','.join(self.python_warnings)
+        return env
 
     def log(self, message):
         print(message)
@@ -173,6 +174,9 @@ class CI:
         self.log(text)
         if 'stdin' not in kw:
             kw['stdin'] = subprocess.DEVNULL
+        if 'env' in kw:
+            raise NotImplementedError("cannot override env")
+        kw['env'] = self.env
 
         proc = subprocess.run(args, **kw)
 
