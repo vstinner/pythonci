@@ -69,7 +69,7 @@ def main():
         'author': 'Victor Stinner',
         'author_email': 'vstinner@python.org',
         'classifiers': CLASSIFIERS,
-        'packages': ['pythonci'],
+        'packages': ['pythonci', 'pythonci.task'],
         'data_files': data_files,
     }
     setup(**options)
