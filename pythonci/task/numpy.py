@@ -1,11 +1,11 @@
 import os.path
-from pythonci.task import Task
+from pythonci.task import BaseTask
 
 
 NUMPY_ZIP = 'https://files.pythonhosted.org/packages/da/32/1b8f2bb5fb50e4db68543eb85ce37b9fa6660cd05b58bddfafafa7ed62da/numpy-1.17.0.zip'
 
 
-class Numpy(Task):
+class Task(BaseTask):
     name = "numpy"
 
     def _install(self):

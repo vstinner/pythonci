@@ -283,7 +283,7 @@ class CI:
             modname = 'pythonci.task.' + task_name
             mod = __import__(modname).task
             mod = getattr(mod, task_name)
-            task_class = getattr(mod, task_name.title())
+            task_class = mod.Task
             task = task_class(self)
 
             if command == 'install':

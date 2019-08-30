@@ -4,7 +4,7 @@ import os.path
 PYTHONCI_PREFIX = 'python-ci-'
 
 
-class Task:
+class BaseTask:
     name = None
 
     def __init__(self, app):
@@ -30,6 +30,8 @@ class Task:
         except:  # noqa
             self.app.unlink(self._install_marker_file)
             raise
+
+        self.app.log("%s installed in: %s" % (self.name, self.dirname))
         self.app.create_empty_file(self._install_marker_file)
 
     def _run_tests(self):
