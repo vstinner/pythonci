@@ -1,3 +1,4 @@
+import os.path
 from pythonci.task import Task
 
 
@@ -22,5 +23,5 @@ class Numpy(Task):
 
     def _run_tests(self):
         self.app.pip_install_update(["nose", "pytest"])
-        self.app.run_python([os.path.join(self.dirname, 'tools', 'test-installed-numpy.py'), "--mode=full"])
-
+        script = os.path.join(self.dirname, 'tools', 'test-installed-numpy.py')
+        self.app.run_python([script, "--mode=full"])

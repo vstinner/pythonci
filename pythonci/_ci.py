@@ -18,7 +18,7 @@ def get_url_filename(url, suffix):
     filename = filename.split('/')[-1]
     if not filename.endswith(suffix):
         raise Exception("%r filename doesn't end with %r suffix; url=%r"
-                       % (filename, suffix, url))
+                        % (filename, suffix, url))
     return filename
 
 
@@ -36,9 +36,10 @@ class CI:
         self.set_work_dir()
 
         self.python_warnings = []
-        #self.python_warnings.append('error')
+        # self.python_warnings.append('error')
         self.python_dev_mode = True
-        #self.python_bytes_warnings = None
+        # self.python_bytes_warnings = None
+
         # 2 stands for '-bb'
         self.python_bytes_warnings = 2
         self.read_package_versions()
@@ -129,7 +130,9 @@ class CI:
                 self.package_versions[name] = version
 
     def pip_install_update(self, packages):
-        args = []
+        if not packages:
+            raise ValueError
+        args = ["-m", "pip", "install", "--upgrade"]
         for name in packages:
             try:
                 version = self.package_versions[name]
@@ -137,7 +140,7 @@ class CI:
                 raise Exception("unversionned package: %r" % name)
             arg = add_version(name, version)
             args.append(arg)
-        return self.run_python(["-m", "pip", "install", "--upgrade"] + list(args))
+        return self.run_python(args)
 
     def get_python_version(self):
         if self._python_version is None:
@@ -160,7 +163,7 @@ class CI:
 
         try:
             self.run_command(["wget", "-O", filename, url])
-        except:
+        except:  # noqa
             self.unlink(filename)
             raise
 
@@ -217,7 +220,7 @@ class CI:
         if create_venv:
             try:
                 self.run_python(["-m", "venv", self.venv_dir])
-            except:
+            except:   # noqa
                 self.rmtree(self.venv_dir)
                 raise
         else:

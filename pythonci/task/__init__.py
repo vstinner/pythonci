@@ -22,12 +22,12 @@ class Task:
 
         if os.path.exists(self._install_marker_file):
             self.app.log("%s is already installed in: %s"
-                        % (self.name, self.dirname))
+                         % (self.name, self.dirname))
             return
 
         try:
             self._install()
-        except:
+        except:  # noqa
             self.app.unlink(self._install_marker_file)
             raise
         self.app.create_empty_file(self._install_marker_file)

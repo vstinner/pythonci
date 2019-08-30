@@ -16,5 +16,5 @@ class Jinja(Task):
         self.app.pip_install_update(["pytest"])
 
     def _run_tests(self):
-        #self.run_python(["-m", "pytest", "--tb=short", "-Werror"])
+        # FIXME: test with -Werror?
         self.app.run_python(["-m", "pytest", "--tb=short"])
