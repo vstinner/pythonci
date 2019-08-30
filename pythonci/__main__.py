@@ -1,2 +1,2 @@
-from . import CI
+from ._ci import CI
 CI().main()
