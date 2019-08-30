@@ -9,6 +9,10 @@ import sys
 import urllib.parse
 
 
+VERSION = (0, 1, 0)
+__version__ = '.'.join(map(str, VERSION))
+
+
 # FIXME what are (build) dependencies? python3, gcc, ???
 # FIXME: reproduce build
 

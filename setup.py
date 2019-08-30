@@ -3,14 +3,11 @@
 # Prepare a release:
 #
 #  - git pull --rebase
-#  - update version in setup.py, pythonci/__init__.py and doc/conf.py
+#  - update VERSION in pythonci/__init__.py
 #  - set release date in doc/changelog.rst
 #  - git commit -a -m "prepare release x.y"
 #  - Remove untracked files/dirs: git clean -fdx
-#  - run tests: tox
 #  - git push
-#  - check Travis CI status:
-#    https://travis-ci.org/vstinner/pythonci
 #
 # Release a new version:
 #
@@ -25,8 +22,6 @@
 #  - set version to n+1
 #  - git commit -a -m "post-release"
 #  - git push
-
-VERSION = '1.6.1'
 
 DESCRIPTION = 'Python module to run and analyze benchmarks'
 CLASSIFIERS = [
@@ -46,6 +41,11 @@ CLASSIFIERS = [
 def main():
     import os.path
     from setuptools import setup
+    import sys
+
+    sys.path.insert(0, '')
+    import pythonci
+    VERSION = pythonci.__version__
 
     with open('README.rst', encoding="utf8") as fp:
         long_description = fp.read().strip()
