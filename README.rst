@@ -20,14 +20,14 @@ This project is a proof-of-concept.
 
 Usage::
 
-    python3 -m python_ci
+    python3 -m pythonci test numpy
 
 Cleanup::
 
-    python3 -m python_ci clean
+    python3 -m pythonci clean numpy
 
 Cleanup all::
 
-    python3 -m python_ci cleanall
+    python3 -m pythonci cleanall numpy
 
-Contact: Victor Stinner (Red Hat), vstinner@redhat.com
+Contact: Victor Stinner (Red Hat), vstinner@python.org
