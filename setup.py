@@ -2,6 +2,7 @@
 
 # Prepare a release:
 #
+#  - update pythonci/requirements.txt
 #  - git pull --rebase
 #  - update VERSION in pythonci/__init__.py
 #  - set release date in doc/changelog.rst
