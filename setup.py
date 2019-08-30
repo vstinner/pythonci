@@ -39,15 +39,16 @@ CLASSIFIERS = [
 # test_tools.py, to ensure that VERSION is the same than
 # pythonci.__version__.
 def main():
+    import io
     import os.path
-    from setuptools import setup
     import sys
+    from setuptools import setup
 
     sys.path.insert(0, '')
     import pythonci
     VERSION = pythonci.__version__
 
-    with open('README.rst', encoding="utf8") as fp:
+    with io.open('README.rst', encoding="utf8") as fp:
         long_description = fp.read().strip()
 
     requirements = [os.path.join('pythonci', 'requirements.txt')]

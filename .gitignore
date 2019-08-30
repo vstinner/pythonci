@@ -9,3 +9,5 @@ build
 dist
 pythonci.egg-info/
 
+# directory created by tox
+.tox/
