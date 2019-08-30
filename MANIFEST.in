@@ -1,0 +1,5 @@
+include COPYING
+include MANIFEST.in
+include README.rst
+include pythonci/requirements.txt
+include pythonci/patches/*.patch
