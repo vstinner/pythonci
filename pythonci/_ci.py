@@ -85,12 +85,14 @@ class CI:
         python = os.path.abspath(python)
         self.python_args = [python] + self.python_options
 
-    def run_command(self, args, **kw):
+    def run_command(self, args, quiet=False, **kw):
         cmd_str = ' '.join(shlex.quote(arg) for arg in args)
-        text = "Run command: %s" % cmd_str
-        if 'cwd' in kw:
-            text += ' in %s' % kw['cwd']
-        self.log(text)
+        cmd_str = cmd_str.replace("\n", "\\n")
+        if not quiet:
+            text = "Run command: %s" % cmd_str
+            if 'cwd' in kw:
+                text += ' in %s' % kw['cwd']
+            self.log(text)
         if 'stdin' not in kw:
             kw['stdin'] = subprocess.DEVNULL
         if 'env' in kw:
@@ -151,7 +153,8 @@ class CI:
         code = "import sys; print(sys.version_info[:3])"
         proc = self.run_python(["-c", code],
                                stdout=subprocess.PIPE,
-                               universal_newlines=True)
+                               universal_newlines=True,
+                               quiet=True)
         line = proc.stdout.rstrip()
         self._python_version = ast.literal_eval(line)
         return self._python_version
@@ -179,7 +182,8 @@ class CI:
 
         proc = self.run_python(["-c", code],
                                stdout=subprocess.PIPE,
-                               universal_newlines=True)
+                               universal_newlines=True,
+                               quiet=True)
         self._python_version_str = proc.stdout.rstrip()
         return self._python_version_str
 
@@ -315,11 +319,11 @@ class CI:
         task_name = self.args.task
         command = self.args.command
 
+        self.set_task_dir(self.task_directory_name(task_name))
+
         if self.args.command == 'clean':
             self.rmtree(self.task_dir)
         else:
-            self.set_task_dir(self.task_directory_name(task_name))
-
             modname = 'pythonci.task.' + task_name
             mod = __import__(modname).task
             mod = getattr(mod, task_name)
