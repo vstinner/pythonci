@@ -31,3 +31,8 @@ Cleanup all::
     python3 -m pythonci cleanall numpy
 
 Contact: Victor Stinner (Red Hat), vstinner@python.org
+
+TODO:
+
+* coverage runs tests using tox, but tox uses Python 3.7 rather than the Python
+  program used to run pythonci.

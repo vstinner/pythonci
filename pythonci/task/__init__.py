@@ -10,6 +10,7 @@ class BaseTask:
     def __init__(self, app):
         self.app = app
         self._install_marker_file = None
+        self.app.set_task_dir(self.app.task_directory_name(self.name))
         self.dirname = self.app.package_directory(self.name)
 
     def _install(self):
@@ -31,8 +32,12 @@ class BaseTask:
             self.app.unlink(self._install_marker_file)
             raise
 
+        # ignore encoding error: the marker file is not read, only written
+        with open(self._install_marker_file, "w", errors="replace") as fp:
+            fp.write(self.dirname)
+            fp.flush()
+
         self.app.log("%s installed in: %s" % (self.name, self.dirname))
-        self.app.create_empty_file(self._install_marker_file)
 
     def _run_tests(self):
         pass

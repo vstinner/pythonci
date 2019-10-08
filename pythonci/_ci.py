@@ -310,26 +310,27 @@ class CI:
         self.chdir(self.task_dir)
         self.setup_venv()
 
+    def _get_task(self):
+        task_name = self.args.task
+
+        modname = 'pythonci.task.' + task_name
+        mod = __import__(modname).task
+        mod = getattr(mod, task_name)
+        task_class = mod.Task
+        return task_class(self)
+
     def main(self):
         self.parse_options()
         if self.args.command == 'cleanall':
             self.rmtree(self.root_dir)
             return
 
-        task_name = self.args.task
+        task = self._get_task()
+
         command = self.args.command
-
-        self.set_task_dir(self.task_directory_name(task_name))
-
-        if self.args.command == 'clean':
+        if command == 'clean':
             self.rmtree(self.task_dir)
         else:
-            modname = 'pythonci.task.' + task_name
-            mod = __import__(modname).task
-            mod = getattr(mod, task_name)
-            task_class = mod.Task
-            task = task_class(self)
-
             if command == 'install':
                 task.install()
             elif command == 'test':
