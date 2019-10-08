@@ -10,14 +10,14 @@ class BaseTask:
     def __init__(self, app):
         self.app = app
         self._install_marker_file = None
-        self.dirname = self.app.project_directory(self.name)
+        self.dirname = self.app.package_directory(self.name)
 
     def _install(self):
         pass
 
     def install(self):
-        self.app.setup_env(self.name)
-        self._install_marker_file = os.path.join(self.app.work_dir,
+        self.app.setup_env()
+        self._install_marker_file = os.path.join(self.app.task_dir,
                                                  PYTHONCI_PREFIX + 'install_marker_file')
 
         if os.path.exists(self._install_marker_file):

@@ -6,6 +6,7 @@ import shlex
 import shutil
 import subprocess
 import sys
+import textwrap
 import urllib.parse
 
 
@@ -33,7 +34,7 @@ class CI:
     def __init__(self):
         self.source_dir = os.path.abspath(os.path.dirname(__file__))
         self.root_dir = os.path.abspath('work')
-        self.set_work_dir()
+        self.set_task_dir()
 
         self.python_warnings = []
         # self.python_warnings.append('error')
@@ -57,6 +58,7 @@ class CI:
             self.python_options.append('-W%s' % warn)
 
         self._python_version = None
+        self._python_version_str = None
         self.set_python(sys.executable)
 
     def create_environ(self):
@@ -143,13 +145,43 @@ class CI:
         return self.run_python(args)
 
     def get_python_version(self):
-        if self._python_version is None:
-            proc = self.run_python(["-c", "import sys; print(sys.version_info[:3])"],
-                                   stdout=subprocess.PIPE,
-                                   universal_newlines=True)
-            line = proc.stdout.rstrip()
-            self._python_version = ast.literal_eval(line)
+        if self._python_version is not None:
+            return self._python_version
+
+        code = "import sys; print(sys.version_info[:3])"
+        proc = self.run_python(["-c", code],
+                               stdout=subprocess.PIPE,
+                               universal_newlines=True)
+        line = proc.stdout.rstrip()
+        self._python_version = ast.literal_eval(line)
         return self._python_version
+
+    def get_python_version_str(self):
+        # Get the Python version string including the Python implementation
+        # name. Example: 'cpython-3.8.0b4'
+        if self._python_version_str is not None:
+            return self._python_version_str
+
+        code = textwrap.dedent("""
+            import sys
+
+            if hasattr(sys, 'implementation'):
+                name = sys.implementation.name
+            else:
+                import platform
+                name = platform.python_implementation()
+            name = name.lower()
+
+            version = sys.version.split()[0]
+
+            print("%s-%s" % (name, version))
+        """)
+
+        proc = self.run_python(["-c", code],
+                               stdout=subprocess.PIPE,
+                               universal_newlines=True)
+        self._python_version_str = proc.stdout.rstrip()
+        return self._python_version_str
 
     def download(self, url, filename):
         self.mkdir(self.download_dir)
@@ -186,16 +218,25 @@ class CI:
         self.log("Remove directory: %s" % dirname)
         shutil.rmtree(dirname)
 
-    def project_directory(self, name):
+    def package_directory(self, name):
+        # Create an absolute path
+        # Example: "/path/to/numpy-1.17.2"
         version = self.package_versions[name]
-        return os.path.join(self.work_dir, "%s-%s" % (name, version))
+        dirname = "%s-%s" % (name, version)
+        return os.path.join(self.task_dir, dirname)
+
+    def task_directory_name(self, name):
+        # Example: "cpython-3.8_numpy-1.16.2"
+        python = self.get_python_version_str()
+        version = self.package_versions[name]
+        return "%s_%s-%s" % (python, name, version)
 
     def download_extract_zip(self, url, dirname):
         filename = get_url_filename(url, '.zip')
         filename = self.download(url, filename)
 
         self.rmtree(dirname)
-        self.run_command(["unzip", "-d", self.work_dir, filename])
+        self.run_command(["unzip", "-d", self.task_dir, filename])
 
     def download_extract_tarball(self, url, dirname):
         filename = get_url_filename(url, '.tar.gz')
@@ -247,22 +288,22 @@ class CI:
                             choices=sorted(tasks))
         self.args = parser.parse_args()
 
-    def set_work_dir(self, name=None):
+    def set_task_dir(self, name=None):
         if name:
-            self.work_dir = os.path.join(self.root_dir, name)
+            self.task_dir = os.path.join(self.root_dir, name)
         else:
-            self.work_dir = self.root_dir
+            self.task_dir = self.root_dir
         self.download_dir = os.path.join(self.root_dir, 'download')
-        self.venv_dir = os.path.join(self.work_dir, 'venv')
+        self.venv_dir = os.path.join(self.task_dir, 'venv')
 
     def chdir(self, path):
         self.log("Change directory: %s" % path)
         os.chdir(path)
 
-    def setup_env(self, name):
+    def setup_env(self):
         self.mkdir(self.root_dir)
-        self.mkdir(self.work_dir)
-        self.chdir(self.work_dir)
+        self.mkdir(self.task_dir)
+        self.chdir(self.task_dir)
         self.setup_venv()
 
     def main(self):
@@ -275,10 +316,9 @@ class CI:
         command = self.args.command
 
         if self.args.command == 'clean':
-            self.rmtree(self.work_dir)
+            self.rmtree(self.task_dir)
         else:
-            pyver = self.get_python_version()
-            self.set_work_dir(task_name + "-py%s.%s" % pyver[:2])
+            self.set_task_dir(self.task_directory_name(task_name))
 
             modname = 'pythonci.task.' + task_name
             mod = __import__(modname).task
