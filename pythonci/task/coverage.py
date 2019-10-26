@@ -9,8 +9,10 @@ class Task(BaseTask):
 
     def _install(self):
         self.app.download_extract_tarball(URL, self.dirname)
+        self.app.chdir(self.dirname)
         # FIXME: don't use tox
         self.app.pip_install_update(["tox"])
+        self.app.patch_tox_basepython()
 
     def _run_tests(self):
         self.app.chdir(self.dirname)

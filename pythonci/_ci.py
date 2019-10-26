@@ -59,6 +59,7 @@ class CI:
 
         self._python_version = None
         self._python_version_str = None
+        self._orig_python_args = None
         self.set_python(sys.executable)
 
     def create_environ(self):
@@ -84,6 +85,8 @@ class CI:
     def set_python(self, python):
         python = os.path.abspath(python)
         self.python_args = [python] + self.python_options
+        if self._orig_python_args is None:
+            self._orig_python_args = self.python_args
 
     def run_command(self, args, quiet=False, **kw):
         cmd_str = ' '.join(shlex.quote(arg) for arg in args)
@@ -318,6 +321,33 @@ class CI:
         mod = getattr(mod, task_name)
         task_class = mod.Task
         return task_class(self)
+
+    def patch_tox_basepython(self):
+        # rely on the current working directory
+        filename = 'tox.ini'
+
+        with open(filename, encoding="utf-8") as fp:
+            content = fp.read()
+
+        # Don't pass arguments, only the executable
+        # Don't use the Python of the venv, but the original Python
+        #python = self._orig_python_args[0]
+        python = self.python_args[0]
+        line = f"basepython = {python}\n"
+
+        testenv = "[testenv]\n"
+        pos = content.find(testenv)
+        if pos:
+            pos += len(testenv)
+            content = content[:pos] + line + content[pos:]
+        else:
+            content = f"{testenv}{line}" + content
+
+        with open(filename, "w", encoding="utf-8") as fp:
+            fp.write(content)
+            fp.flush()
+
+        self.log(f"basepython overriden in {filename}")
 
     def main(self):
         self.parse_options()
