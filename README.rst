@@ -18,6 +18,8 @@ Projects which should be tested to modify Python:
 
 This project is a proof-of-concept.
 
+Python 2 is not supported: pythonci requires Python 3.6 or newer.
+
 Usage::
 
     python3 -m pythonci test numpy
