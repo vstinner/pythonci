@@ -26,7 +26,8 @@ class Task(BaseTask):
 
         self.app.run_python(["setup.py", "install"], cwd=self.dirname)
 
-    def _run_tests(self):
         self.app.pip_install_update(["nose", "pytest"])
+
+    def _run_tests(self):
         script = os.path.join(self.dirname, 'tools', 'test-installed-numpy.py')
         self.app.run_python([script, "--mode=full"])
