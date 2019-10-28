@@ -236,7 +236,10 @@ class CI:
         # Example: "cpython-3.8_numpy-1.16.2"
         python = self.get_python_version_str()
         version = self.package_versions[name]
-        return "%s_%s-%s" % (python, name, version)
+        dirname = "%s_%s-%s" % (python, name, version)
+        if self.args.dev:
+            dirname += "-dev"
+        return dirname
 
     def download_extract_zip(self, url, dirname):
         filename = get_url_filename(url, '.zip')
@@ -293,6 +296,7 @@ class CI:
                             choices='install test clean cleanall'.split())
         parser.add_argument('task',
                             choices=sorted(tasks))
+        parser.add_argument('--dev', action="store_true")
         self.args = parser.parse_args()
 
     def set_task_dir(self, name=None):

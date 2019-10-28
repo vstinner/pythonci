@@ -23,9 +23,15 @@ This project is a proof-of-concept.
 
 Python 2 is not supported: pythonci requires Python 3.6 or newer.
 
-Usage::
+The tested Python is the Python used to run the command.
+
+Test numpy (stable releases)::
 
     python3 -m pythonci test numpy
+
+Test development versions::
+
+    python3 -m pythonci test numpy --dev
 
 Cleanup::
 
@@ -42,7 +48,6 @@ TODO
 
 * coverage runs tests using tox, but tox uses Python 3.7 rather than the Python
   program used to run pythonci.
-* Support development version of Cython
 * Compile and install master branch of Python
 
 Status

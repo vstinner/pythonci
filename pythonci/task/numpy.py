@@ -10,7 +10,12 @@ class Task(BaseTask):
 
     def _install(self):
         # rely on Fedora to provide OpenBLAS or pull it differently?
-        self.app.pip_install_update(["Cython"])
+
+        if self.app.args.dev:
+            url = "git+git://github.com/cython/cython.git@a32a29e8aaa688e0507d374ab47e641eb1a427c4#egg=Cython"
+            self.app.run_python(["-m", "pip", "install", url])
+        else:
+            self.app.pip_install_update(["Cython"])
 
         self.app.download_extract_zip(NUMPY_ZIP, self.dirname)
         self.app.chdir(self.dirname)
