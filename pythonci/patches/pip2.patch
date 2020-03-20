@@ -1,11 +1,12 @@
---- a/pip/_vendor/cachecontrol/serialize.py.old	2019-06-20 15:21:27.809646932 +0200
-+++ b/pip/_vendor/cachecontrol/serialize.py	2019-06-20 15:22:14.467702259 +0200
-@@ -179,7 +179,7 @@
+--- a/pip/_vendor/msgpack/fallback.py.old	2020-03-20 18:02:37.755433719 +0100
++++ b/pip/_vendor/msgpack/fallback.py	2020-03-20 18:03:56.436490096 +0100
+@@ -130,6 +130,9 @@
  
-     def _loads_v4(self, request, data):
-         try:
--            cached = msgpack.loads(data, encoding="utf-8")
-+            cached = msgpack.loads(data, raw=False)
-         except ValueError:
-             return
- 
+     See :class:`Unpacker` for options.
+     """
++    if "encoding" in kwargs:
++        kwargs['raw'] = True
++        kwargs.pop('encoding')
+     unpacker = Unpacker(None, max_buffer_size=len(packed), **kwargs)
+     unpacker.feed(packed)
+     try:

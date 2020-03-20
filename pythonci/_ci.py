@@ -263,7 +263,6 @@ class CI:
         ver = self.get_python_version()
         venv_libdir = os.path.join(self.venv_dir, 'lib', 'python%s.%s' % (ver[0], ver[1]), 'site-packages')
         self.patch('pip2.patch', venv_libdir)
-        self.patch('setuptools.patch', venv_libdir)
 
     def setup_venv(self):
         create_venv = not os.path.exists(self.venv_dir)
