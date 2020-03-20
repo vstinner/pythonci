@@ -1,7 +1,8 @@
 from pythonci.task import BaseTask
 
 
-JINJA_TARBALL = 'https://files.pythonhosted.org/packages/7b/db/1d037ccd626d05a7a47a1b81ea73775614af83c2b3e53d86a0bb41d8d799/Jinja2-2.10.3.tar.gz'
+JINJA_TARBALL = 'https://files.pythonhosted.org/packages/d8/03/e491f423379ea14bb3a02a5238507f7d446de639b623187bccc111fbecdf/Jinja2-2.11.1.tar.gz'
+
 
 
 class Task(BaseTask):
