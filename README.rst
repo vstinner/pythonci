@@ -18,6 +18,7 @@ Projects which should be tested to modify Python:
 * jinja2
 * docutils
 * Sphinx
+* psycopg2
 
 This project is a proof-of-concept.
 
