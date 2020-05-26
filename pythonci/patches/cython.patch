@@ -1,74 +1,94 @@
-commit cffbc5c417a55cfb17ff5201aa63b5269e94ba61
-Author: Victor Stinner <vstinner@python.org>
-Date:   Tue May 26 17:40:17 2020 +0200
-
-    WIP: Use Py_SET_SIZE() on Python 3.9.0a4 and newer
-
+diff --git a/Cython/Compiler/ModuleNode.py b/Cython/Compiler/ModuleNode.py
+index 15efdd669..32f7dc2f9 100644
+--- a/Cython/Compiler/ModuleNode.py
++++ b/Cython/Compiler/ModuleNode.py
+@@ -1692,9 +1692,9 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
+         code.putln("{")
+         code.putln("PyObject *etype, *eval, *etb;")
+         code.putln("PyErr_Fetch(&etype, &eval, &etb);")
+-        code.putln("++Py_REFCNT(o);")
++        code.putln("__Pyx_SET_REFCNT(o, Py_REFCNT(o) + 1);")
+         code.putln("%s(o);" % entry.func_cname)
+-        code.putln("--Py_REFCNT(o);")
++        code.putln("__Pyx_SET_REFCNT(o, Py_REFCNT(o) - 1);")
+         code.putln("PyErr_Restore(etype, eval, etb);")
+         code.putln("}")
+ 
 diff --git a/Cython/Utility/Builtins.c b/Cython/Utility/Builtins.c
-index 27a551213..7d0596965 100644
+index a8e8f0a08..ce8cacd2e 100644
 --- a/Cython/Utility/Builtins.c
 +++ b/Cython/Utility/Builtins.c
-@@ -279,7 +279,11 @@ static PyObject *__Pyx_PyLong_AbsNeg(PyObject *n) {
+@@ -257,7 +257,7 @@ static PyObject *__Pyx_PyLong_AbsNeg(PyObject *n) {
      {
          PyObject *copy = _PyLong_Copy((PyLongObject*)n);
          if (likely(copy)) {
-+#if PY_VERSION_HEX >= 0x030900A4
-+            Py_SET_SIZE(copy, -Py_SIZE(copy));
-+#else
-             Py_SIZE(copy) = -(Py_SIZE(copy));
-+#endif
+-            Py_SIZE(copy) = -(Py_SIZE(copy));
++            __Pyx_SET_SIZE(copy, -Py_SIZE(copy));
          }
          return copy;
      }
+diff --git a/Cython/Utility/ModuleSetupCode.c b/Cython/Utility/ModuleSetupCode.c
+index dc1d7b09a..1287a0ea0 100644
+--- a/Cython/Utility/ModuleSetupCode.c
++++ b/Cython/Utility/ModuleSetupCode.c
+@@ -829,6 +829,20 @@ static CYTHON_INLINE PyObject * __Pyx_PyDict_GetItemStrWithError(PyObject *dict,
+   #define PySet_CheckExact(obj)        __Pyx_IS_TYPE(obj, &PySet_Type)
+ #endif
+ 
++
++#if PY_VERSION_HEX >= 0x030900A4
++  #define __Pyx_SET_REFCNT(obj, refcnt) Py_SET_REFCNT(obj, refcnt)
++#else
++  #define __Pyx_SET_REFCNT(obj, refcnt) Py_REFCNT(obj) = (refcnt)
++#endif
++
++
++#if PY_VERSION_HEX >= 0x030900A4
++  #define __Pyx_SET_SIZE(obj, size) Py_SET_SIZE(obj, size)
++#else
++  #define __Pyx_SET_SIZE(obj, size) Py_SIZE(obj) = (size)
++#endif
++
+ #if CYTHON_ASSUME_SAFE_MACROS
+   #define __Pyx_PySequence_SIZE(seq)  Py_SIZE(seq)
+ #else
 diff --git a/Cython/Utility/Optimize.c b/Cython/Utility/Optimize.c
-index d6c32ace2..a25c95744 100644
+index a401aa26d..0e75bc3ce 100644
 --- a/Cython/Utility/Optimize.c
 +++ b/Cython/Utility/Optimize.c
-@@ -35,7 +35,11 @@ static CYTHON_INLINE int __Pyx_PyList_Append(PyObject* list, PyObject* x) {
+@@ -35,7 +35,7 @@ static CYTHON_INLINE int __Pyx_PyList_Append(PyObject* list, PyObject* x) {
      if (likely(L->allocated > len) & likely(len > (L->allocated >> 1))) {
          Py_INCREF(x);
          PyList_SET_ITEM(list, len, x);
-+#if PY_VERSION_HEX >= 0x030900A4
-+        Py_SET_SIZE(list, len+1);
-+#else
-         Py_SIZE(list) = len+1;
-+#endif
+-        Py_SIZE(list) = len+1;
++        __Pyx_SET_SIZE(list, len + 1);
          return 0;
      }
      return PyList_Append(list, x);
-@@ -53,7 +57,11 @@ static CYTHON_INLINE int __Pyx_ListComp_Append(PyObject* list, PyObject* x) {
+@@ -53,7 +53,7 @@ static CYTHON_INLINE int __Pyx_ListComp_Append(PyObject* list, PyObject* x) {
      if (likely(L->allocated > len)) {
          Py_INCREF(x);
          PyList_SET_ITEM(list, len, x);
-+#if PY_VERSION_HEX >= 0x030900A4
-+        Py_SET_SIZE(list, len+1);
-+#else
-         Py_SIZE(list) = len+1;
-+#endif
+-        Py_SIZE(list) = len+1;
++        __Pyx_SET_SIZE(list, len + 1);
          return 0;
      }
      return PyList_Append(list, x);
-@@ -104,7 +112,11 @@ static CYTHON_INLINE PyObject* __Pyx__PyObject_Pop(PyObject* L) {
+@@ -104,7 +104,7 @@ static CYTHON_INLINE PyObject* __Pyx__PyObject_Pop(PyObject* L) {
  static CYTHON_INLINE PyObject* __Pyx_PyList_Pop(PyObject* L) {
      /* Check that both the size is positive and no reallocation shrinking needs to be done. */
      if (likely(PyList_GET_SIZE(L) > (((PyListObject*)L)->allocated >> 1))) {
-+#if PY_VERSION_HEX >= 0x030900A4
-+        Py_SET_SIZE(L, Py_SIZE(L) - 1);
-+#else
-         Py_SIZE(L) -= 1;
-+#endif
+-        Py_SIZE(L) -= 1;
++        __Pyx_SET_SIZE(L, Py_SIZE(L) - 1);
          return PyList_GET_ITEM(L, PyList_GET_SIZE(L));
      }
      return CALL_UNBOUND_METHOD(PyList_Type, "pop", L);
-@@ -167,7 +179,11 @@ static PyObject* __Pyx__PyList_PopIndex(PyObject* L, PyObject* py_ix, Py_ssize_t
+@@ -167,7 +167,7 @@ static PyObject* __Pyx__PyList_PopIndex(PyObject* L, PyObject* py_ix, Py_ssize_t
          }
          if (likely(__Pyx_is_valid_index(cix, size))) {
              PyObject* v = PyList_GET_ITEM(L, cix);
-+#if PY_VERSION_HEX >= 0x030900A4
-+            Py_SET_SIZE(L, Py_SIZE(L) - 1);
-+#else
-             Py_SIZE(L) -= 1;
-+#endif
+-            Py_SIZE(L) -= 1;
++            __Pyx_SET_SIZE(L, Py_SIZE(L) - 1);
              size -= 1;
              memmove(&PyList_GET_ITEM(L, cix), &PyList_GET_ITEM(L, cix+1), (size_t)(size-cix)*sizeof(PyObject*));
              return v;
