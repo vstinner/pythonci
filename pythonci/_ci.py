@@ -42,7 +42,7 @@ class CI:
         # self.python_bytes_warnings = None
 
         # 2 stands for '-bb'
-        self.python_bytes_warnings = 2
+        self.python_bytes_warnings = 0
         self.read_package_versions()
 
         if self.python_bytes_warnings and self.python_bytes_warnings > 1:
