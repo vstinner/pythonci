@@ -10,6 +10,13 @@ Build a CI to test popular numpy on the master branch of Python.
 * https://etherpad.gnome.org/p/python-master-ci
 * https://github.com/vstinner/python-ci
 
+Available tasks:
+
+* coverage
+* cython
+* jinja
+* numpy
+
 Projects which should be tested to modify Python:
 
 * setuptools
