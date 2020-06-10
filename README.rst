@@ -16,13 +16,12 @@ Available tasks:
 * cython
 * jinja
 * numpy
+* lxml
 
 Projects which should be tested to modify Python:
 
 * setuptools
 * pip
-* numpy
-* jinja2
 * docutils
 * Sphinx
 * psycopg2
