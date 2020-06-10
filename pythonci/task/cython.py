@@ -2,8 +2,7 @@ import os.path
 from pythonci.task import BaseTask
 
 
-TARBALL = 'https://files.pythonhosted.org/packages/79/36/69246177114d0b6cb7bd4f9aef177b434c0f4a767e05201b373e8c8d7092/Cython-0.29.19.tar.gz'
-
+TARBALL = 'https://files.pythonhosted.org/packages/3f/61/16a435de52fcda15246597a602aab6132cea50bedeb0919cb8874a068a20/Cython-0.29.20.tar.gz'
 
 
 class Task(BaseTask):
@@ -12,7 +11,6 @@ class Task(BaseTask):
     def _install(self):
         self.app.download_extract_tarball(TARBALL, self.dirname)
         self.app.chdir(self.dirname)
-        self.app.patch('cython.patch')
 
         self.app.run_python(["setup.py", "install"], cwd=self.dirname)
 
