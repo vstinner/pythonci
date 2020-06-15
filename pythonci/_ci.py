@@ -141,11 +141,13 @@ class CI:
             raise ValueError
         args = ["-m", "pip", "install", "--upgrade"]
         for name in packages:
-            try:
-                version = self.package_versions[name]
-            except KeyError:
-                raise Exception("unversionned package: %r" % name)
-            arg = add_version(name, version)
+            # don't pin the version with --dev
+            if not self.args.dev:
+                try:
+                    version = self.package_versions[name]
+                except KeyError:
+                    raise Exception("unversionned package: %r" % name)
+                arg = add_version(name, version)
             args.append(arg)
         return self.run_python(args)
 
