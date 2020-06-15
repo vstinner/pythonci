@@ -16,6 +16,7 @@ class Task(BaseTask):
         self.app.download_extract_zip(NUMPY_ZIP, self.dirname)
         self.app.chdir(self.dirname)
 
+        self.app.patch('numpy.patch')
         self.app.remove_cython_files()
 
         self.app.run_python(["setup.py", "install"], cwd=self.dirname)
