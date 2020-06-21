@@ -1,7 +1,7 @@
 from pythonci.task import BaseTask
 
 
-URL = 'https://files.pythonhosted.org/packages/85/d5/818d0e603685c4a613d56f065a721013e942088047ff1027a632948bdae6/coverage-4.5.4.tar.gz'
+URL = 'https://files.pythonhosted.org/packages/fe/4d/3d892bdd21acba6c9e9bec6dc93fbe619883a0967c62f976122f2c6366f3/coverage-5.1.tar.gz'
 
 
 class Task(BaseTask):
@@ -16,5 +16,5 @@ class Task(BaseTask):
 
     def _run_tests(self):
         self.app.chdir(self.dirname)
-        # FIXME: don't test Python 3.7 but Python used by pythonci!
-        self.app.run_python(["-m", "tox", "-e", "py37"])
+        # tox -e py run tests with the Python executable used to run tox
+        self.app.run_python(["-m", "tox", "-e", "py"])
