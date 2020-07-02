@@ -381,7 +381,7 @@ class CI:
 
     def install_cython(self):
         if self.args.dev:
-            url = "git+git://github.com/cython/cython.git@0.29x" # "#egg=Cython"
+            url = "git+git://github.com/cython/cython.git@0.29x"
             self.run_python(["-m", "pip", "install", url])
         else:
             self.pip_install_update(["Cython"])

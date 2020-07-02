@@ -2,7 +2,7 @@ import os.path
 from pythonci.task import BaseTask
 
 
-NUMPY_ZIP = 'https://files.pythonhosted.org/packages/01/1b/d3ddcabd5817be02df0e6ee20d64f77ff6d0d97f83b77f65e98c8a651981/numpy-1.18.5.zip'
+NUMPY_ZIP = 'https://files.pythonhosted.org/packages/f1/2c/717bdd12404c73ec0c8c734c81a0bad7048866bc36a88a1b69fd52b01c07/numpy-1.19.0.zip'
 
 
 class Task(BaseTask):
@@ -16,7 +16,6 @@ class Task(BaseTask):
         self.app.download_extract_zip(NUMPY_ZIP, self.dirname)
         self.app.chdir(self.dirname)
 
-        self.app.patch('numpy.patch')
         self.app.remove_cython_files()
 
         self.app.run_python(["setup.py", "install"], cwd=self.dirname)
