@@ -5,7 +5,7 @@ Python CI
 pythonci
 ========
 
-Build a CI to test popular numpy on the master branch of Python.
+Build a CI to test popular PyPI projects on the master branch of Python.
 
 * https://etherpad.gnome.org/p/python-master-ci
 * https://github.com/vstinner/python-ci
@@ -18,7 +18,7 @@ Available tasks:
 * numpy
 * lxml
 
-Projects which should be tested to modify Python:
+TODO: Projects which should be tested to modify Python:
 
 * setuptools
 * pip
@@ -27,6 +27,11 @@ Projects which should be tested to modify Python:
 * psycopg2
 
 This project is a proof-of-concept.
+
+There are different goals:
+
+* Test if incompatible changes are going to break projects
+* Run tests with warnings treated as errors, especially DeprecationWarning.
 
 Python 2 is not supported: pythonci requires Python 3.6 or newer.
 
