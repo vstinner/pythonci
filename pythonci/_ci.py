@@ -10,10 +10,6 @@ import textwrap
 import urllib.parse
 
 
-# FIXME what are (build) dependencies? python3, gcc, ???
-# FIXME: reproduce build
-
-
 def get_url_filename(url, suffix):
     filename = urllib.parse.urlparse(url).path
     filename = filename.split('/')[-1]

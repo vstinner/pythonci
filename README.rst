@@ -18,14 +18,6 @@ Available tasks:
 * numpy
 * lxml
 
-TODO: Projects which should be tested to modify Python:
-
-* setuptools
-* pip
-* docutils
-* Sphinx
-* psycopg2
-
 This project is a proof-of-concept.
 
 There are different goals:
@@ -58,9 +50,27 @@ Contact: Victor Stinner (Red Hat), vstinner@python.org
 TODO
 ====
 
+Projects which should be tested to modify Python:
+
+* setuptools
+* pip
+* docutils
+* Sphinx
+* psycopg2
+
+Bugs:
+
+* jinja: DeprecationWarning crash:
+  https://github.com/pallets/jinja/issues/1276
+
+Tasks:
+
+* jinja: run tests with -Werror?
 * coverage runs tests using tox, but tox uses Python 3.7 rather than the Python
   program used to run pythonci.
 * Compile and install master branch of Python
+* What are build dependencies? python3, gcc, etc.?
+* Make builds more reproducible: https://reproducible-builds.org/
 
 Status
 ======

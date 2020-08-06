@@ -16,5 +16,4 @@ class Task(BaseTask):
         self.app.pip_install_update(["pytest"])
 
     def _run_tests(self):
-        # FIXME: test with -Werror?
         self.app.run_python(["-m", "pytest", "--tb=short"])
