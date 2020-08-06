@@ -1,7 +1,7 @@
 from pythonci.task import BaseTask
 
 
-URL = 'https://files.pythonhosted.org/packages/fe/4d/3d892bdd21acba6c9e9bec6dc93fbe619883a0967c62f976122f2c6366f3/coverage-5.1.tar.gz'
+URL = 'https://files.pythonhosted.org/packages/20/c0/0df91b7bde75063316f0aa5fa699f76b2bbb4514f190a2f68580b18d2f31/coverage-5.2.1.tar.gz'
 
 
 class Task(BaseTask):
@@ -17,4 +17,5 @@ class Task(BaseTask):
     def _run_tests(self):
         self.app.chdir(self.dirname)
         # tox -e py run tests with the Python executable used to run tox
+        # https://github.com/nedbat/coveragepy/issues/1001
         self.app.run_python(["-m", "tox", "-e", "py"])

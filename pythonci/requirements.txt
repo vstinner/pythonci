@@ -9,6 +9,6 @@ pytest==5.2.1
 # Updating Jinja2 requires to update JINJA_TARBALL in pythonci/task/jinja.py
 Jinja2==2.11.1
 # Updating coverage requires to update URL in pythonci/task/coverage.py
-coverage==5.1
+coverage==5.2.1
 
 tox==3.15.2
