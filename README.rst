@@ -47,6 +47,18 @@ Cleanup all::
 
 Contact: Victor Stinner (Red Hat), vstinner@python.org
 
+Goals
+=====
+
+* Report issues to core developers who authored changes which broken projects.
+* Report issues to broken projects to help them to be prepared for the next
+  Python.
+* Increase the number of compatible projects when a new Python version
+  is released.
+* Estimate how many projects are broken by a change, before pushing the change.
+* Reduce the workload of Fedora which currently is one of the first to detect
+  incompatible changes and broken packages.
+
 Use Cases
 =========
 
@@ -56,7 +68,7 @@ Check if a future Python change breaks third-party projects
 Examples:
 
 * PEP 620 incompatible C API changes.
-* Remove "U" mode of the open() function
+* Remove "U" mode of the open() function: deprecated function.
 
 Detect projects broken by Python incompatible changes
 -----------------------------------------------------
@@ -68,17 +80,30 @@ can enhance the documentation explaining how to port the code, they can help
 to fix these broken packages, and they can consider to revert the change
 and only reapply it once enough projects are fixed.
 
+Check for DeprecationWarning
+----------------------------
+
+Run the test suite using: python3 -Werror.
+
+Test in development mode
+------------------------
+
+Run the test suite using: python3 -X dev.
+
 
 TODO
 ====
 
-Projects which should be tested to modify Python:
+Projects which should be tested:
 
-* setuptools
-* pip
+* django
 * docutils
-* Sphinx
+* pillow
+* pip
 * psycopg2
+* scipy
+* setuptools
+* sphinx
 
 Bugs:
 
@@ -125,3 +150,9 @@ Cython 0.29.13 is broken by Python 3.9, use collections.Iterable
 
 * Need a Cython release
 * Fixed by: https://github.com/cython/cython/commit/35fe19096c223b65ba3dfb4b7df185e2389b1f87#diff-7709661204b9afb11dad99f803bb188a
+
+Existing CIs
+============
+
+* https://conda-forge.org/
+* Travis CI "nightly" Python
