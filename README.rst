@@ -47,6 +47,28 @@ Cleanup all::
 
 Contact: Victor Stinner (Red Hat), vstinner@python.org
 
+Use Cases
+=========
+
+Check if a future Python change breaks third-party projects
+-----------------------------------------------------------
+
+Examples:
+
+* PEP 620 incompatible C API changes.
+* Remove "U" mode of the open() function
+
+Detect projects broken by Python incompatible changes
+-----------------------------------------------------
+
+Some Python changes are not seen by their authors as incompatible changes,
+but sometimes there are 5 or more projects broken by such change. If the
+authors of such change would be notified earlier of broken packages, they
+can enhance the documentation explaining how to port the code, they can help
+to fix these broken packages, and they can consider to revert the change
+and only reapply it once enough projects are fixed.
+
+
 TODO
 ====
 
@@ -71,6 +93,18 @@ Tasks:
 * Compile and install master branch of Python
 * What are build dependencies? python3, gcc, etc.?
 * Make builds more reproducible: https://reproducible-builds.org/
+
+Fedora COPR
+===========
+
+In Fedora, "COPR" are created: rebuild some Fedora package with a newer Python.
+
+* Based on Fedora Rawhide
+* Need to identify the bootstrap sequence: dnf, compose tool, bodhi
+* Test 10 popular Python projects: cython, scipy, django, ...
+* Need to change COPR to avoid updates unrelated to Python: kernel, GCC, glibc
+
+Update the python package every N weeks.
 
 Status
 ======
