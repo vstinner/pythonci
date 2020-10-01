@@ -156,3 +156,5 @@ Existing CIs
 
 * https://conda-forge.org/
 * Travis CI "nightly" Python
+
+See also: https://pythondev.readthedocs.io/test_next_python.html
