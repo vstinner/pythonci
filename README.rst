@@ -96,11 +96,15 @@ TODO
 
 Projects which should be tested:
 
+* cffi
 * django
 * docutils
+* markupsafe (for Jupyter)
+* pandas
 * pillow
 * pip
 * psycopg2
+* pyzmq (for Jupyter)
 * scipy
 * setuptools
 * sphinx
