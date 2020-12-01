@@ -104,7 +104,7 @@ Projects which should be tested:
 * pillow
 * pip
 * psycopg2
-* pyzmq (for Jupyter)
+* pyzmq (for Jupyter) (use Cython)
 * scipy
 * setuptools
 * sphinx
