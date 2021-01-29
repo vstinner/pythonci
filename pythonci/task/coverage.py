@@ -1,7 +1,7 @@
 from pythonci.task import BaseTask
 
 
-URL = 'https://files.pythonhosted.org/packages/20/c0/0df91b7bde75063316f0aa5fa699f76b2bbb4514f190a2f68580b18d2f31/coverage-5.2.1.tar.gz'
+URL = 'https://files.pythonhosted.org/packages/29/83/9429871de6c7ec9ff113e12246af75aad4f0a7f31c66d0a499a0b7443a71/coverage-5.4.tar.gz'
 
 
 class Task(BaseTask):

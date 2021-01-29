@@ -2,7 +2,7 @@ import os.path
 from pythonci.task import BaseTask
 
 
-NUMPY_ZIP = 'https://files.pythonhosted.org/packages/f1/2c/717bdd12404c73ec0c8c734c81a0bad7048866bc36a88a1b69fd52b01c07/numpy-1.19.0.zip'
+NUMPY_ZIP = 'https://files.pythonhosted.org/packages/51/60/3f0fe5b7675a461d96b9d6729beecd3532565743278a9c3fe6dd09697fa7/numpy-1.19.5.zip'
 
 
 class Task(BaseTask):
