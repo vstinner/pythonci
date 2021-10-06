@@ -2,7 +2,7 @@ import os.path
 from pythonci.task import BaseTask
 
 
-TARBALL = 'https://files.pythonhosted.org/packages/6c/9f/f501ba9d178aeb1f5bf7da1ad5619b207c90ac235d9859961c11829d0160/Cython-0.29.21.tar.gz'
+TARBALL = 'https://files.pythonhosted.org/packages/59/e3/78c921adf4423fff68da327cc91b73a16c63f29752efe7beb6b88b6dd79d/Cython-0.29.24.tar.gz'
 
 
 class Task(BaseTask):
