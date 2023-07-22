@@ -259,10 +259,6 @@ class CI:
         for filename in patches:
             self.patch(filename, dirname)
 
-    def patch_pip(self):
-        ver = self.get_python_version()
-        venv_libdir = os.path.join(self.venv_dir, 'lib', 'python%s.%s' % (ver[0], ver[1]), 'site-packages')
-
     def setup_venv(self):
         create_venv = not os.path.exists(self.venv_dir)
 
@@ -279,7 +275,6 @@ class CI:
 
         if create_venv:
             self.pip_install_update(["setuptools", "pip"])
-            self.patch_pip()
 
     def get_tasks(self):
         task_dir = os.path.join(self.source_dir, 'task')
