@@ -7,16 +7,16 @@ pythonci
 
 Build a CI to test popular PyPI projects on the master branch of Python.
 
-* https://etherpad.gnome.org/p/python-master-ci
 * https://github.com/vstinner/python-ci
+* https://etherpad.gnome.org/p/python-master-ci
 
 Available tasks:
 
 * coverage
 * cython
 * jinja
-* numpy
 * lxml
+* numpy
 
 This project is a proof-of-concept.
 
