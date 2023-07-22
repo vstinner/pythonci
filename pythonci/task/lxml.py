@@ -2,7 +2,7 @@ import os.path
 from pythonci.task import BaseTask
 
 
-TARBALL = 'https://files.pythonhosted.org/packages/e5/21/a2e4517e3d216f0051687eea3d3317557bde68736f038a3b105ac3809247/lxml-4.6.3.tar.gz'
+TARBALL = 'https://files.pythonhosted.org/packages/30/39/7305428d1c4f28282a4f5bdbef24e0f905d351f34cf351ceb131f5cddf78/lxml-4.9.3.tar.gz'
 
 
 class Task(BaseTask):

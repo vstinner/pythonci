@@ -124,6 +124,8 @@ class CI:
         filename = os.path.join(self.source_dir, 'requirements.txt')
         with io.open(filename, encoding='utf8') as fp:
             for line in fp:
+                # strip comments
+                line = line.split('#', maxsplit=1)[0]
                 line = line.rstrip()
                 if '==' in line:
                     name, version = line.split('==', 1)

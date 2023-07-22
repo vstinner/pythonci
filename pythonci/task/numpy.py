@@ -2,7 +2,7 @@ import os.path
 from pythonci.task import BaseTask
 
 
-NUMPY_ZIP = 'https://files.pythonhosted.org/packages/51/60/3f0fe5b7675a461d96b9d6729beecd3532565743278a9c3fe6dd09697fa7/numpy-1.19.5.zip'
+TARBALL = 'https://files.pythonhosted.org/packages/cf/7a/f68d1d658a0e68084097beb212fa9356fee7eabff8b57231cc4acb555b12/numpy-1.25.1.tar.gz'
 
 
 class Task(BaseTask):
@@ -13,7 +13,7 @@ class Task(BaseTask):
 
         self.app.install_cython()
 
-        self.app.download_extract_zip(NUMPY_ZIP, self.dirname)
+        self.app.download_extract_tarball(TARBALL, self.dirname)
         self.app.chdir(self.dirname)
 
         self.app.remove_cython_files()
